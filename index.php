@@ -11,18 +11,23 @@
     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
     }
 
+    img {
+    border-radius: 10px 10px 0 0;
+    }
+
     .container {
     padding: 2px 16px;
     }
     
     li{
-    max-width:330px;
+    max-width:550px;
     word-wrap:break-word;
     }
 </style>
 <body style="background-color:#dbc6a8">
 
 <?php
+
 $connection = new MongoClient();
 $db = $connection->db_project_ads->ads;
 
@@ -49,11 +54,16 @@ echo "<div class=\"container\">";
 echo "<div class=\"row\">";
 
 foreach ($result as $item) {
-    echo "<div class=\"col-sm-4\">";
-        echo "<div class=\"card\">"; 
+    echo "<div class=\"col-sm-4\">";            // 3 ads per line
+        echo "<div class=\"card\">";            // Make it look a tiny bit prettier
+            $i = 2;
+            if (array_keys($item)[2] == 'Image') {
+                echo "<img  src=\"" . array_values($item)[2]. "\" alt=\"Image\" style=\"width:100%\">";
+                $i++;
+            }
             echo "<div class=\"container\">";
-                for ($i = 2; $i < count(array_keys($item)); $i++) {
-                    echo "<li><b>" . array_keys($item)[$i] . ": " . array_values($item)[$i] . "</b></li><br>";      // WRITE PRETTILY
+                for ($i; $i < count(array_keys($item)); $i++) {
+                    echo "<li><b>" . array_keys($item)[$i] . ": " . array_values($item)[$i] . "</b></li><br>";
                 }
                 echo "<form method=\"post\">";
                     echo "<input type=\"hidden\" name=\"id\" value=\"" . array_values($item)[0] . "\">";

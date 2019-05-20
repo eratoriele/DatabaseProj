@@ -14,7 +14,7 @@ if (isset($_POST["field0"])) {
 }
 else {
 
-    echo "<form method=\"post\">";
+    echo "<form method=\"post\" enctype=\"multipart/form-data\">";
         echo "<h2 class=\"form-signin-heading\">\tPlease fill in</h2>";
 
         if ($_GET["fields"] > 0) {
@@ -108,6 +108,13 @@ else {
             echo "</div></div></div>";
         }
         echo "<div class=\"container\">";
+        echo "<div class=\"row\">";
+            echo "<div class=\"col-sm-12\">";
+                echo "Select image to upload: (JPG, JPEG, PNG) (Optional) (File name shouldn't be longer than 200 chars)";
+                echo "<input type=\"file\" name=\"fileToUpload\" id=\"fileToUpload\"><br><br>";
+            echo "</div></div></div>";
+
+        echo "<div class=\"container\">";
             echo "<div class=\"row\">";
                     echo "<button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">Make an ad!</button></div></div>";
 
@@ -124,29 +131,35 @@ function makead() {
     $connection = new MongoClient();
     $db = $connection->db_project_ads->ads;
     
-    $document = array ('Verified' => false);
-    if ($_POST["fields"] > 0)
-        $document[$_POST["field0"]] = $_POST["value0"];
-    if ($_POST["fields"] > 1)
-        $document[$_POST["field1"]] = $_POST["value1"];
-    if ($_POST["fields"] > 2)
-        $document[$_POST["field2"]] = $_POST["value2"];
-    if ($_POST["fields"] > 3)
-        $document[$_POST["field3"]] = $_POST["value3"];
-    if ($_POST["fields"] > 4)
-        $document[$_POST["field4"]] = $_POST["value4"];
-    if ($_POST["fields"] > 5)
-        $document[$_POST["field5"]] = $_POST["value5"];
-    if ($_POST["fields"] > 6)
-        $document[$_POST["field6"]] = $_POST["value6"];
-    if ($_POST["fields"] > 7)
-        $document[$_POST["field7"]] = $_POST["value7"];
-    if ($_POST["fields"] > 8)
-        $document[$_POST["field8"]] = $_POST["value8"];
-    if ($_POST["fields"] > 9)
-        $document[$_POST["field9"]] = $_POST["value9"];
+    $entry = array('Verified' => false);
 
-    $db->insert($document);           // Create
+    if ($_FILES["fileToUpload"]["name"] != '') {		// upload an image if there is any provided
+        require "upload.php";
+        $entry['Image'] = $target_file;
+    }
+    
+    if ($_POST["fields"] > 0)
+        $entry[$_POST["field0"]] = $_POST["value0"];
+    if ($_POST["fields"] > 1)
+        $entry[$_POST["field1"]] = $_POST["value1"];
+    if ($_POST["fields"] > 2)
+        $entry[$_POST["field2"]] = $_POST["value2"];
+    if ($_POST["fields"] > 3)
+        $entry[$_POST["field3"]] = $_POST["value3"];
+    if ($_POST["fields"] > 4)
+        $entry[$_POST["field4"]] = $_POST["value4"];
+    if ($_POST["fields"] > 5)
+        $entry[$_POST["field5"]] = $_POST["value5"];
+    if ($_POST["fields"] > 6)
+        $entry[$_POST["field6"]] = $_POST["value6"];
+    if ($_POST["fields"] > 7)
+        $entry[$_POST["field7"]] = $_POST["value7"];
+    if ($_POST["fields"] > 8)
+        $entry[$_POST["field8"]] = $_POST["value8"];
+    if ($_POST["fields"] > 9)
+        $entry[$_POST["field9"]] = $_POST["value9"];
+
+    $db->insert($entry);           // Create
 
     echo "<a href=\"./\">Go back</a>";
 }
